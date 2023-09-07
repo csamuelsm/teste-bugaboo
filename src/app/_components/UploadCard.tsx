@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react'
 import { Card, Box, Grid, Heading, Text, Kbd, Button, Separator, Flex, Strong } from '@radix-ui/themes';
 import { FileIcon, UploadIcon, HandIcon, CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
+import { useSession } from 'next-auth/react';
 
 const validator = require('gltf-validator');
 
@@ -35,12 +36,32 @@ function validateGLB(file:File | undefined,
 function UploadCard() {
     const [file, setFile] = useState<File>();
     const [valid, setValid] = useState<boolean|null>(null);
+    const { data: session } = useSession();
 
     const inputFile = useRef(null);
 
     const openFileHandler = () => {
         //@ts-ignore
         inputFile.current.click();
+    }
+
+    const submitFile = async(username:string|null|undefined) => {
+        if (!file || username == null || typeof username === "undefined") return;
+
+        try {
+            const data = new FormData();
+            data.set('file', file);
+            data.set('user', username);
+
+            const res = await fetch('/api/upload/', {
+                method: 'POST',
+                body: data
+            });
+
+            if (!res.ok) throw new Error(await res.text());
+        } catch (e: any) {
+            console.log(e);
+        }
     }
 
     return (
@@ -90,7 +111,7 @@ function UploadCard() {
                                 </Strong>
                         </Text>
                         <Separator my="5" size="4" />
-                        <Button>
+                        <Button disabled={!valid || !file} onClick={() => submitFile(session?.user?.name)}>
                             <UploadIcon/> Enviar
                         </Button>
                         <Button variant='outline'>

@@ -13,13 +13,15 @@
   "pluginOptions": {},
   "attributes": {
     "usuario": {
-      "type": "string"
+      "type": "string",
+      "unique": true
     },
     "pass": {
       "type": "string"
     },
     "userId": {
-      "type": "uid"
+      "type": "uid",
+      "targetField": "usuario"
     }
   }
 }

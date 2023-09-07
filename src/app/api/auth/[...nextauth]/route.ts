@@ -21,13 +21,3 @@ export async function POST(request: Request) {
         session: session
     })
 }*/
-
-/*export async function POST(request: Request, response:Response) {
-    let data = await request.json()
-    //console.log(data);
-    const session = await getSession(request, response);
-    session.loggedIn = true;
-    return NextResponse.json({
-        message: data.user
-    })
-}*/

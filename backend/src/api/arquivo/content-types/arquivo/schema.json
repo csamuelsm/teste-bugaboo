@@ -1,0 +1,23 @@
+{
+  "kind": "collectionType",
+  "collectionName": "arquivos",
+  "info": {
+    "singularName": "arquivo",
+    "pluralName": "arquivos",
+    "displayName": "arquivos"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "path": {
+      "type": "string"
+    },
+    "usuario": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::usuario.usuario"
+    }
+  }
+}

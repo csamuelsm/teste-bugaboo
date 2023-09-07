@@ -11,6 +11,10 @@ export const authOptions: NextAuthOptions = {
       CredentialsProvider({
         name: "Sign in",
         credentials: {
+          id: {
+            label: "id",
+            type: "number",
+          },
           user: {
             label: "User",
             type: "text",
@@ -22,8 +26,7 @@ export const authOptions: NextAuthOptions = {
             let username = credentials?.user;
             console.log("authorizing", username)
             return {
-                id: "1",
-                name: username
+                name: credentials?.id,
             }
         }
       }),

@@ -66,10 +66,11 @@ function LogInForm({ loggedIn } : InferGetServerSidePropsType<typeof getServerSi
                         getUser(data["user"], encrypted) // verificando no banco se existe usuário correspondente com os dados
                         .then((res) => {
                             if(Array.isArray(res.data) && res.data.length > 0) {
-                                console.log("Logado com sucesso!")
+                                //console.log("Logado com sucesso!", res.data?.[0].id);
                                 signIn('credentials', {
                                     redirect:false,
                                     user:data["user"],
+                                    id: res.data?.[0].id,
                                 })
                             } else {
                                 console.log("Usuário ou senha errados.");

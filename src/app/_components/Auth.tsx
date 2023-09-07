@@ -9,7 +9,7 @@ type AuthProps = {
 
 function Auth({ children } : AuthProps) {
 
-    const { status } = useSession();
+    const { data: session, status, update } = useSession();
 
     if (status === "loading") {
         return (
