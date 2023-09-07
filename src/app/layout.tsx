@@ -19,7 +19,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt" suppressHydrationWarning>
-      <body>
+      <body style={{
+        padding: 5
+      }}>
         <Theme accentColor='violet' appearance='dark'>
           <SessionProvider>
             {children}

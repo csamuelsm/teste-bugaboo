@@ -68,9 +68,17 @@ function SignUpForm() {
 
     return (
         <>
-        <Grid columns="3" gap="3" width="100%">
+        <Grid columns={{
+            md: '3',
+            xs: '1'
+            }} gap="3" width="100%">
             <Box/>
-            <Box>
+            <Box style={{
+                padding: 5,
+                display: "flex",
+                alignContent: "center",
+                justifyContent: "center",
+            }}>
             {/* Aqui é a parte do formulário de cadastro */}
             <Card variant="classic" style={{
                 width: "100%",

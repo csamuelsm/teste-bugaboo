@@ -5,7 +5,7 @@ import { getUser } from "./strapi";
 export const authOptions: NextAuthOptions = {
     session: {
       strategy: "jwt",
-      maxAge: 60 * 10,
+      maxAge: 60 * 10 * 10,
     },
     providers: [
       CredentialsProvider({
