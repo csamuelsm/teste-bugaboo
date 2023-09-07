@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
 import { Flex } from '@radix-ui/themes';
-import LogInForm from './_components/LogInForm';
+import SignUpForm from '../_components/SignUpForm';
 
 function Index() {
   return (
@@ -9,7 +9,7 @@ function Index() {
       style={{
         minHeight: "100vh"
       }}>
-        <LogInForm loggedIn={false}/>
+        <SignUpForm/>
     </Flex>
 
   )

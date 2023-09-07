@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "usuarios",
+  "info": {
+    "singularName": "usuario",
+    "pluralName": "usuarios",
+    "displayName": "Usuarios",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "usuario": {
+      "type": "string"
+    },
+    "pass": {
+      "type": "string"
+    },
+    "userId": {
+      "type": "uid"
+    }
+  }
+}

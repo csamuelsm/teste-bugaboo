@@ -1,34 +1,35 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+### Como executar
 
-## Getting Started
+Primeiramente, você precisa instalar todos os pacotes do front-end e do back-end. A partir da raiz do projeto, rode os seguintes comandos:
 
-First, run the development server:
+```bash
+npm i
+cd backend && npm i
+```
+
+A partir da pasta `./backend/`, execute:
+
+```bash
+npm run develop
+```
+
+Espere alguns instantes e o Strapi deve abrir no endereço `http:localhost:1337`. Crie um usuário para você e abra o painel admin em `http:localhost:1337/admin` caso o painel já não tenha sido aberto automaticamente.
+
+No menu do lado esquerdo no painel, navegue até `Settings` em seguido para `API Tokens` e gere um token de acesso para você. Selecione a duração que desejar e em `Token type`, selecione a opção `Full access`. Com isto, você tem um token com todas as permissões para executar ações no banco de dados.
+
+Edite o arquivo `.env.sample`, adicionando o token que você acabou de gerar:
+
+```
+NEXT_PUBLIC_STRAPI_TOKEN="SEU TOKEN AQUI"
+NEXT_PUBLIC_STRAPI_URL="http://localhost:1337"
+```
+
+Remova o `.sample`, deixando o arquivo com o nome apenas `.env`.
+
+Em outro terminal, abra a raiz do projeto e execute:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Abra o endereço `http://localhost:3000/` no seu navegador, crie seu usuário e pode começar a utilizar o sistema.
