@@ -1,9 +1,10 @@
 "use client"
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'
-import { Card, Box, Grid, Heading, Separator, TextField, Button, Text, Link, Strong } from '@radix-ui/themes';
+import { Flex, Callout, Card, Box, Grid, Heading, Separator, TextField, Button, Text, Link, Strong } from '@radix-ui/themes';
 import * as Form from '@radix-ui/react-form';
 import { redirect } from 'next/navigation';
+import { CrossCircledIcon } from '@radix-ui/react-icons';
 
 import { useSession, signIn } from 'next-auth/react';
 
@@ -25,9 +26,34 @@ export const getServerSideProps:GetServerSideProps<{
     }
 }
 
+type CalloutProps = {
+    open:boolean,
+    onOpenChange:React.Dispatch<React.SetStateAction<boolean>>
+}
+
+function ErrorCallout({ open, onOpenChange } : CalloutProps) {
+    /* Um alert para comunicação de erro na criação do usuário */
+    return (
+        <Flex direction="column" align="center" justify="center" style={{
+            display: open ? "flex" : "none"
+        }}>
+            <Callout.Root color='red'>
+                <Callout.Icon>
+                    <CrossCircledIcon />
+                </Callout.Icon>
+                <Callout.Text>
+                    Usuário ou senha incorretos. Tente novamente.
+                </Callout.Text>
+            </Callout.Root>
+        </Flex>
+    )
+}
+
 function LogInForm({ loggedIn } : InferGetServerSidePropsType<typeof getServerSideProps>) {
 
     const { data: session, status, update } = useSession();
+
+    const [incorrect, setIncorrect] = useState<boolean>(false);
 
     useEffect(() => {
         if (session && status === "authenticated") {
@@ -39,6 +65,7 @@ function LogInForm({ loggedIn } : InferGetServerSidePropsType<typeof getServerSi
     }, [status])
 
     return (
+    <>
     <Grid columns={{
         md: '3',
         xs: '1'
@@ -67,13 +94,17 @@ function LogInForm({ loggedIn } : InferGetServerSidePropsType<typeof getServerSi
                         .then((res) => {
                             if(Array.isArray(res.data) && res.data.length > 0) {
                                 //console.log("Logado com sucesso!", res.data?.[0].id);
+                                setIncorrect(false);
                                 signIn('credentials', {
                                     redirect:false,
                                     user:data["user"],
                                     id: res.data?.[0].id,
                                 })
                             } else {
-                                console.log("Usuário ou senha errados.");
+                                setIncorrect(true);
+                                setTimeout(() => {
+                                    setIncorrect(false);
+                                }, 5000);
                             }
                         })
                     }
@@ -110,6 +141,8 @@ function LogInForm({ loggedIn } : InferGetServerSidePropsType<typeof getServerSi
         </Card>
         </Box>
     </Grid>
+    <ErrorCallout open={incorrect} onOpenChange={setIncorrect}/>
+    </>
   )
 }
 

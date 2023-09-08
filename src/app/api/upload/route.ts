@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     await writeFile(p, buffer);
     console.log(`Arquivo enviado para o caminho ${p}`);
 
-    let exists = await fileExists(p);
+    let exists = await fileExists(p, Number(user));
     if (!exists) {
         try {
             let fileSave = await saveFile(p, user);

@@ -1,7 +1,9 @@
 "use client"
-import { Flex, Text, Heading, Link } from '@radix-ui/themes'
+import { Flex, Text, Heading, Link, Button } from '@radix-ui/themes'
 import { useSession } from 'next-auth/react'
 import React, { ReactNode } from 'react'
+import { signOut } from 'next-auth/react'
+import { ExitIcon } from '@radix-ui/react-icons';
 
 type AuthProps = {
     children:ReactNode
@@ -41,7 +43,17 @@ function Auth({ children } : AuthProps) {
     }
 
     return (
-        <div>{children}</div>
+        <div>
+            <Button variant='outline' my="5" onClick={() => {
+                signOut({
+                    callbackUrl: `${window.location.origin}`
+                });
+            }}>
+                Encerrar sessão
+                <ExitIcon/>
+            </Button>
+            {children}
+        </div>
     )
 }
 

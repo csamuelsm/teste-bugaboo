@@ -3,6 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { getUser } from "./strapi";
 
 export const authOptions: NextAuthOptions = {
+    secret: process.env.AUTH_SECRET,
     session: {
       strategy: "jwt",
       maxAge: 60 * 10 * 10,

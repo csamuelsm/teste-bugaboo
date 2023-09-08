@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react'
-import { Card, Box, Grid, Heading, Text, Kbd, Button, Separator, Flex, Strong } from '@radix-ui/themes';
+import { Callout, Link, Card, Box, Grid, Heading, Text, Kbd, Button, Separator, Flex, Strong } from '@radix-ui/themes';
 import { FileIcon, UploadIcon, HandIcon, CheckIcon, Cross2Icon } from '@radix-ui/react-icons';
 import { useSession } from 'next-auth/react';
+import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons';
 
 const validator = require('gltf-validator');
 
@@ -32,10 +33,53 @@ function validateGLB(file:File | undefined,
     }
 }
 
+type CalloutProps = {
+    open:boolean,
+    onOpenChange:React.Dispatch<React.SetStateAction<boolean>>
+}
+
+function SuccessCallout({ open, onOpenChange } : CalloutProps) {
+    /* Um alert para confirmação de sucesso na criação do usuário */
+    return (
+        <Flex direction="column" align="center" justify="center" style={{
+            display: open ? "flex" : "none"
+        }}>
+            <Callout.Root color='green'>
+                <Callout.Icon>
+                    <CheckCircledIcon />
+                </Callout.Icon>
+                <Callout.Text>
+                    O arquivo foi salvo com sucesso!
+                </Callout.Text>
+            </Callout.Root>
+        </Flex>
+    )
+}
+
+function ErrorCallout({ open, onOpenChange } : CalloutProps) {
+    /* Um alert para comunicação de erro na criação do usuário */
+    return (
+        <Flex direction="column" align="center" justify="center" style={{
+            display: open ? "flex" : "none"
+        }}>
+            <Callout.Root color='red'>
+                <Callout.Icon>
+                    <CrossCircledIcon />
+                </Callout.Icon>
+                <Callout.Text>
+                    O arquivo já existe ou não foi possível salvar o arquivo.
+                </Callout.Text>
+            </Callout.Root>
+        </Flex>
+    )
+}
+
 
 function UploadCard() {
     const [file, setFile] = useState<File>();
     const [valid, setValid] = useState<boolean|null>(null);
+    const [success, setSuccess] = useState<boolean>(false);
+    const [error, setError] = useState<boolean>(false);
     const { data: session } = useSession();
 
     const inputFile = useRef(null);
@@ -58,13 +102,41 @@ function UploadCard() {
                 body: data
             });
 
-            if (!res.ok) throw new Error(await res.text());
+            const resData = await res.json();
+            console.log(resData);
+            if (resData.success) {
+                console.log("Sucesso");
+                setSuccess(true);
+                setError(false);
+                setFile(undefined);
+                setValid(null);
+                setTimeout(() => {
+                    setSuccess(false);
+                }, 10000);
+            }else if (!resData.success || !res.ok) {
+                console.log("Erro");
+                setError(true);
+                setSuccess(false);
+                setFile(undefined);
+                setValid(null);
+                setTimeout(() => {
+                    setError(false);
+                }, 10000);
+            }
         } catch (e: any) {
-            console.log(e);
+            console.log("Erro");
+            setError(true);
+            setSuccess(false);
+            setFile(undefined);
+            setValid(null);
+            setTimeout(() => {
+                setError(false);
+            }, 10000);
         }
     }
 
     return (
+        <>
         <Grid columns={{
             md: '3',
             xs: '1'
@@ -114,13 +186,18 @@ function UploadCard() {
                         <Button disabled={!valid || !file} onClick={() => submitFile(session?.user?.name)}>
                             <UploadIcon/> Enviar
                         </Button>
-                        <Button variant='outline'>
-                            <HandIcon/> Gerenciar seus arquivos GLB
-                        </Button>
+                        <Link href='/glb_manager'>
+                            <Button variant='outline'>
+                                <HandIcon/> Gerenciar seus arquivos GLB
+                            </Button>
+                        </Link>
                     </Flex>
                 </Card>
             </Box>
         </Grid>
+        <SuccessCallout open={success} onOpenChange={setSuccess}/>
+        <ErrorCallout open={error} onOpenChange={setError}/>
+        </>
     )
 }
 

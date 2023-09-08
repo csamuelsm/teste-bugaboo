@@ -109,11 +109,16 @@ export async function saveFile(path:string, user:string) {
     })
 }
 
-export async function fileExists(path:string) {
+export async function fileExists(path:string, user:number) {
     return strapi.find('arquivos', {
         filters: {
             path: {
                 $eq: path
+            },
+            usuario: {
+                id: {
+                    $eq: user
+                }
             }
         }
     })
@@ -124,4 +129,20 @@ export async function fileExists(path:string) {
     .catch((error) => {
         throw Error(error);
     })
+}
+
+export async function getFiles(user:number) {
+    return strapi.find('arquivos', {
+        filters: {
+            usuario: {
+                id: {
+                    $eq: user
+                }
+            }
+        }
+    });
+}
+
+export async function deleteFile(fileId:number) {
+    return strapi.delete('arquivos', fileId);
 }
