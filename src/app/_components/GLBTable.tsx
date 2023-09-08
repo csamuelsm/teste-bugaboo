@@ -55,7 +55,7 @@ function GLBTable() {
                             Seus arquivos GLB
                         </Heading>
                         <Text>Gerencie seus aquivos <Kbd>GLB</Kbd> abaixo. Para subir mais arquivos, <Link href='/home'>clique aqui</Link>.</Text>
-                        <Table.Root>
+                        <Table.Root size="1">
                             <Table.Header>
                                 <Table.ColumnHeaderCell>ID</Table.ColumnHeaderCell>
                                 <Table.ColumnHeaderCell>Nome</Table.ColumnHeaderCell>
@@ -67,14 +67,20 @@ function GLBTable() {
                                     return (
                                         <Table.Row>
                                             <Table.RowHeaderCell>{glb.id}</Table.RowHeaderCell>
-                                            <Table.Cell>{glb.attributes.path.replace('public/uploads/', '')}</Table.Cell>
+                                            <Table.Cell style={{
+                                                maxWidth: "120px"
+                                            }}>
+                                                {glb.attributes.path.replace('public/uploads/', '')}
+                                            </Table.Cell>
                                             <Table.Cell>{new Date(glb.attributes.createdAt).toLocaleDateString('pt-br', { year:"numeric", month:"short", day:"numeric"})}</Table.Cell>
                                             <Table.Cell>
                                                 <HoverCard.Root>
                                                     <HoverCard.Trigger>
-                                                        <Button variant='outline' mx="1">
-                                                            <EyeOpenIcon/>
-                                                        </Button>
+                                                        <Link href={`/glb_viewer/${glb.attributes.path.replace('public/uploads/', '')}`}>
+                                                            <Button variant='outline' mx="1">
+                                                                <EyeOpenIcon/>
+                                                            </Button>
+                                                        </Link>
                                                     </HoverCard.Trigger>
                                                     <HoverCard.Content size="1">
                                                         <Text size="1">

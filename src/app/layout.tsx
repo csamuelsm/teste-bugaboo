@@ -22,7 +22,8 @@ export default function RootLayout({
       <body style={{
         padding: 5
       }}>
-        <Theme accentColor='violet' appearance='dark'>
+        <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.1.1/model-viewer.min.js"></script>
+        <Theme accentColor='violet' appearance='light'>
           <SessionProvider>
             {children}
           </SessionProvider>
