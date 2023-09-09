@@ -97,10 +97,12 @@ function SignUpForm() {
                             let encrypted = encryptPass(data['password']); //criptografando a senha
                             createUser(data['user'], encrypted) //criando o usuário
                             .then((data) => {
+                                // Mostrando aviso de sucesso na criação do usuário
                                 setSuccess(true);
                                 //console.log("Usuário criado com sucesso", data);
                             })
                             .catch((error) => {
+                                // Mostrando aviso de erro na criação do usuário
                                 setError(true);
                                 //console.log("Erro ao criar o usuário", error);
                             })

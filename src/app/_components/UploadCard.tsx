@@ -8,6 +8,11 @@ const validator = require('gltf-validator');
 
 function validateGLB(file:File | undefined,
     setValid: React.Dispatch<React.SetStateAction<boolean | null>>) {
+    /*
+    Funçaõ para validar o arquivo GLB.
+    Converte o arquivo em uma array a partir do buffer
+    e valida com a função validateBytes da biblioteca gltf-validator
+    */
     console.log("validateGLB")
     if (typeof file !== "undefined") {
         file.arrayBuffer()
@@ -21,14 +26,17 @@ function validateGLB(file:File | undefined,
         })
         .then((report) => {
             console.info('Validação bem-sucedida!', report);
+            // Setando o arquivo como valido
             setValid(true);
         })
         .catch((error) => {
             console.error('Algum erro aconteceu na validação do arquivo', error);
+            // Setando o arquivo como inválido
             setValid(false);
         })
     } else {
         console.error('Arquivo indefinido');
+        // Setando o arquivo como inválido
         setValid(false);
     }
 }
@@ -39,7 +47,7 @@ type CalloutProps = {
 }
 
 function SuccessCallout({ open, onOpenChange } : CalloutProps) {
-    /* Um alert para confirmação de sucesso na criação do usuário */
+    /* Um alert para confirmação de sucesso no upload do arquivo */
     return (
         <Flex direction="column" align="center" justify="center" style={{
             display: open ? "flex" : "none"
@@ -57,7 +65,7 @@ function SuccessCallout({ open, onOpenChange } : CalloutProps) {
 }
 
 function ErrorCallout({ open, onOpenChange } : CalloutProps) {
-    /* Um alert para comunicação de erro na criação do usuário */
+    /* Um alert para comunicação de erro no upload do arquivo */
     return (
         <Flex direction="column" align="center" justify="center" style={{
             display: open ? "flex" : "none"

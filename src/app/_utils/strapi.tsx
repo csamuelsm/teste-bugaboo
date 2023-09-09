@@ -1,5 +1,7 @@
 import Strapi from "strapi-sdk-js";
 
+// INicializando o strapi com as seguintes configurações
+// Utilizamos o TOKEN salvo no arquivo .env
 let config = {
     url: process.env.NEXT_PUBLIC_STRAPI_URL,
     prefix: '/api',
@@ -110,6 +112,7 @@ export async function saveFile(path:string, user:string) {
 }
 
 export async function fileExists(path:string, user:number) {
+    // Verifica se um arquivo existe e retorna true ou false
     return strapi.find('arquivos', {
         filters: {
             path: {
@@ -132,6 +135,7 @@ export async function fileExists(path:string, user:number) {
 }
 
 export async function getFiles(user:number) {
+    // Busca todos os arquivos de um dado usuário
     return strapi.find('arquivos', {
         filters: {
             usuario: {
@@ -144,5 +148,6 @@ export async function getFiles(user:number) {
 }
 
 export async function deleteFile(fileId:number) {
+    // Deleta um arquivo com um dado ID
     return strapi.delete('arquivos', fileId);
 }

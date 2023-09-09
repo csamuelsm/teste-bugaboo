@@ -4,6 +4,7 @@ import { getFiles, deleteFile } from '../_utils/strapi';
 import { useSession } from 'next-auth/react';
 import { EyeOpenIcon, TrashIcon } from '@radix-ui/react-icons';
 
+// Dados dos arquivos salvos no banco de dados
 type GLBdata = {
     id: number,
     attributes: {
@@ -20,9 +21,11 @@ function GLBTable() {
     const [dados, setDados] = useState<GLBdata[]>([]);
 
     useEffect(() => {
+        // Buscando os arquivos no banco de dados
         getFiles(Number(session?.user?.name))
         .then((data) => {
             if (Array.isArray(data.data)) {
+                // Salvamos os arquivos em um formato de array na variável "dados"
                 setDados(data.data);
             } else {
                 console.log("Formato de dados inválido");
@@ -64,6 +67,7 @@ function GLBTable() {
                             </Table.Header>
                             <Table.Body>
                                 {dados.map((glb) => {
+                                    // Aqui vamos gerar uma tabela com uma linha para cada arquivo em "dados"
                                     return (
                                         <Table.Row>
                                             <Table.RowHeaderCell>{glb.id}</Table.RowHeaderCell>

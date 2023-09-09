@@ -8,6 +8,10 @@ type ViewerProps = {
 }
 
 function Viewer({ glb_file } : ViewerProps) {
+  /*
+  Recebe o arquivo GLb e renderiza
+  utilizando o model-viewer
+  */
   return (
     <div>
         <Heading>

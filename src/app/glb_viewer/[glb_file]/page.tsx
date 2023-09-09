@@ -10,6 +10,7 @@ function GLBViewer() {
   const params = useParams();
 
   function getGlbFile() {
+    // obtendo o arquivo glb através do slug na url
     if (Array.isArray(params.glb_file)) {
       return params.glb_file[0];
     } else {

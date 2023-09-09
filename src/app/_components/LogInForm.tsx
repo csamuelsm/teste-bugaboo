@@ -32,7 +32,7 @@ type CalloutProps = {
 }
 
 function ErrorCallout({ open, onOpenChange } : CalloutProps) {
-    /* Um alert para comunicação de erro na criação do usuário */
+    /* Um alert para comunicação de usuário ou senha incorretos */
     return (
         <Flex direction="column" align="center" justify="center" style={{
             display: open ? "flex" : "none"
@@ -57,6 +57,7 @@ function LogInForm({ loggedIn } : InferGetServerSidePropsType<typeof getServerSi
 
     useEffect(() => {
         if (session && status === "authenticated") {
+            // Se o usuário já estiver autenticado vamos redirecioná-lo para a página "home"
             if (session) {
                 console.log("Signed in: ", session.user?.name);
                 redirect('/home')
@@ -95,12 +96,14 @@ function LogInForm({ loggedIn } : InferGetServerSidePropsType<typeof getServerSi
                             if(Array.isArray(res.data) && res.data.length > 0) {
                                 //console.log("Logado com sucesso!", res.data?.[0].id);
                                 setIncorrect(false);
+                                // Logando o usuário e iniciando sua sessão
                                 signIn('credentials', {
                                     redirect:false,
                                     user:data["user"],
                                     id: res.data?.[0].id,
                                 })
                             } else {
+                                // Mostrando o aviso de que o login ou senha estão incorretos
                                 setIncorrect(true);
                                 setTimeout(() => {
                                     setIncorrect(false);

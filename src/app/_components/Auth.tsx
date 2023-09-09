@@ -14,19 +14,28 @@ function Auth({ children } : AuthProps) {
     const { data: session, status, update } = useSession();
 
     if (status === "loading") {
+        /* Retorna apenas uma tela com "Carregando"
+        enquanto o status da sessão ainda não é conhecido
+        Assim, evitamos dar um "flash" de conteúdos indesejados
+        para pessoas inautenticadas */
         return (
             <Flex direction="column" gap="3" align="center" justify="center"
                 style={{
                     minHeight: "100vh"
                 }}>
                 <div>
-                    Loading...
+                    Carregando...
                 </div>
             </Flex>
         )
     }
 
     if (status === "unauthenticated") {
+        /*
+        Se o status da sessão for não-autenticado,
+        retornamos uma tela comunicando que a pessoa não
+        tem permissão
+        */
         return (
             <Flex direction="column" gap="3" align="center" justify="center"
                 style={{
@@ -43,6 +52,12 @@ function Auth({ children } : AuthProps) {
     }
 
     return (
+        /*
+        Caso o status não seja "loading" ou "unauthenticated", então
+        o status é "authenticated", logo o usuário possui permissão
+        para ver o conteúdo da página. Então, renderizamos a página
+        juntamente com um botão de encerrar sessão
+        */
         <div>
             <Button variant='outline' my="5" onClick={() => {
                 signOut({
