@@ -8,7 +8,7 @@ import '@radix-ui/themes/styles.css';
 import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons';
 
 import { encryptPass } from '../_utils/encrypt';
-import { createUser } from '../_utils/strapi';
+import { createUser, getUserByUsername } from '../_utils/strapi';
 
 function validatePassword(pass:string) {
     // recebe uma string e valida se a string segue
@@ -66,6 +66,11 @@ function SignUpForm() {
     const [success, setSuccess] = useState<boolean>(false);
     const [error, setError] = useState<boolean>(false);
 
+    const [serverErrors, setServerErrors] = useState({
+        user: false,
+      });
+
+
     return (
         <>
         <Grid columns={{
@@ -87,6 +92,9 @@ function SignUpForm() {
                 <Heading>Cadastre-se</Heading>
                 <Separator my="5" size="4" />
                 <Form.Root
+                    onClearServerErrors={() => {
+                        setServerErrors({user:false});
+                    }}
                     onSubmit={(event) => {
                         event.preventDefault();
                         //@ts-ignore
@@ -94,25 +102,48 @@ function SignUpForm() {
                         // validando a senha antes de chamar a função para criação de usuário
                         if (typeof data['password'] === "string" && typeof data['user'] === "string"
                             && validatePassword(data['password'])) {
-                            let encrypted = encryptPass(data['password']); //criptografando a senha
-                            createUser(data['user'], encrypted) //criando o usuário
-                            .then((data) => {
-                                // Mostrando aviso de sucesso na criação do usuário
-                                setSuccess(true);
-                                //console.log("Usuário criado com sucesso", data);
+                            let username = data['user'];
+                            let pass = data['password'];
+                            getUserByUsername(data['user'])
+                            .then((userData) => {
+                                // Verificando se usuário existe
+                                if (Array.isArray(userData.data) && userData.data.length > 0) {
+                                    setServerErrors({user:true});
+                                } else {
+                                    let encrypted = encryptPass(pass); //criptografando a senha
+                                    createUser(username, encrypted) //criando o usuário
+                                    .then((data) => {
+                                        // Mostrando aviso de sucesso na criação do usuário
+                                        setSuccess(true);
+                                        setInterval(() => {
+                                            setSuccess(false);
+                                        }, 5000)
+                                        //console.log("Usuário criado com sucesso", data);
+                                    })
+                                    .catch((error) => {
+                                        // Mostrando aviso de erro na criação do usuário
+                                        setError(true);
+                                        setInterval(() => {
+                                            setError(false);
+                                        }, 5000)
+                                        //console.log("Erro ao criar o usuário", error);
+                                    })
+                                }
                             })
                             .catch((error) => {
-                                // Mostrando aviso de erro na criação do usuário
-                                setError(true);
-                                //console.log("Erro ao criar o usuário", error);
+                                setServerErrors({user:true});
                             })
                         }
                     }}>
-                    <Form.Field name="user">
+                    <Form.Field name="user" serverInvalid={serverErrors.user}>
                         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
                             <Form.Label>Usuário</Form.Label>
                             <Form.Message className="FormMessage" match="valueMissing">
-                            <Text color="crimson" size="1">Por favor, digite o seu usuário</Text>
+                                <Text color="crimson" size="1">Por favor, digite o seu usuário</Text>
+                            </Form.Message>
+
+                            <Form.Message className="FormMessage" match="typeMismatch" forceMatch={serverErrors.user}>
+                                <Text color="crimson" size="1">Este usuário já existe</Text>
                             </Form.Message>
                         </div>
                         <Form.Control asChild required>
@@ -160,10 +191,10 @@ function SignUpForm() {
                     </Form.Field>
                     <Separator my="5" size="4" />
                     <Form.Submit asChild>
-                        <Button variant="solid" size="3">Entrar</Button>
+                        <Button variant="solid" size="3">Cadastrar</Button>
                     </Form.Submit>
                 </Form.Root>
-                <Text size="2" my="3">Ou <Strong><Link href='/signup'>se cadastre</Link></Strong>.</Text>
+                <Text size="2" my="3">Voltar para <Strong><Link href='/'>página de LogIn</Link></Strong>.</Text>
             </Card>
             </Box>
         </Grid>

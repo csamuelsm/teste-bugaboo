@@ -7,6 +7,12 @@ npm i
 cd backend && npm i
 ```
 
+Caso algum erro aconteça, tente adicionar a flag `--force`:
+
+```bash
+npm i --force
+```
+
 A partir da pasta `./backend/`, execute:
 
 ```bash

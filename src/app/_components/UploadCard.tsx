@@ -7,12 +7,14 @@ import { CheckCircledIcon, CrossCircledIcon } from '@radix-ui/react-icons';
 const validator = require('gltf-validator');
 
 function validateGLB(file:File | undefined,
-    setValid: React.Dispatch<React.SetStateAction<boolean | null>>) {
+    setValid: React.Dispatch<React.SetStateAction<boolean | null>>,
+    setVerifying: React.Dispatch<React.SetStateAction<boolean>>) {
     /*
     Funçaõ para validar o arquivo GLB.
     Converte o arquivo em uma array a partir do buffer
     e valida com a função validateBytes da biblioteca gltf-validator
     */
+    setVerifying(true);
     console.log("validateGLB")
     if (typeof file !== "undefined") {
         file.arrayBuffer()
@@ -28,16 +30,19 @@ function validateGLB(file:File | undefined,
             console.info('Validação bem-sucedida!', report);
             // Setando o arquivo como valido
             setValid(true);
+            setVerifying(false);
         })
         .catch((error) => {
             console.error('Algum erro aconteceu na validação do arquivo', error);
             // Setando o arquivo como inválido
             setValid(false);
+            setVerifying(false);
         })
     } else {
         console.error('Arquivo indefinido');
         // Setando o arquivo como inválido
         setValid(false);
+        setVerifying(false);
     }
 }
 
@@ -88,6 +93,8 @@ function UploadCard() {
     const [valid, setValid] = useState<boolean|null>(null);
     const [success, setSuccess] = useState<boolean>(false);
     const [error, setError] = useState<boolean>(false);
+    const [verifying, setVerifying] = useState<boolean>(false);
+    const [sending, setSending] = useState<boolean>(false);
     const { data: session } = useSession();
 
     const inputFile = useRef(null);
@@ -99,6 +106,7 @@ function UploadCard() {
 
     const submitFile = async(username:string|null|undefined) => {
         if (!file || username == null || typeof username === "undefined") return;
+        setSending(true);
 
         try {
             const data = new FormData();
@@ -118,6 +126,7 @@ function UploadCard() {
                 setError(false);
                 setFile(undefined);
                 setValid(null);
+                setSending(false);
                 setTimeout(() => {
                     setSuccess(false);
                 }, 10000);
@@ -127,6 +136,7 @@ function UploadCard() {
                 setSuccess(false);
                 setFile(undefined);
                 setValid(null);
+                setSending(false);
                 setTimeout(() => {
                     setError(false);
                 }, 10000);
@@ -137,6 +147,7 @@ function UploadCard() {
             setSuccess(false);
             setFile(undefined);
             setValid(null);
+            setSending(false);
             setTimeout(() => {
                 setError(false);
             }, 10000);
@@ -172,7 +183,7 @@ function UploadCard() {
                             style={{display:'none'}}
                             onChange={(e) => {
                                 setFile(e.target.files?.[0]);
-                                validateGLB(e.target.files?.[0], setValid);
+                                validateGLB(e.target.files?.[0], setValid, setVerifying);
                             }}
                             />
                         <Button onClick={() => openFileHandler()}>
@@ -190,10 +201,14 @@ function UploadCard() {
                                     {!valid && "Arquivo inválido"}
                                 </Strong>
                         </Text>
+                        {verifying &&
+                        <Text size="2">Verificando arquivo. Aguarde um instante...</Text>}
                         <Separator my="5" size="4" />
                         <Button disabled={!valid || !file} onClick={() => submitFile(session?.user?.name)}>
                             <UploadIcon/> Enviar
                         </Button>
+                        {sending &&
+                        <Text size="2">Enviando arquivo. Aguarde um instante...</Text>}
                         <Link href='/glb_manager'>
                             <Button variant='outline'>
                                 <HandIcon/> Gerenciar seus arquivos GLB
