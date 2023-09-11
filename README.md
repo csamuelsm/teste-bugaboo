@@ -64,9 +64,9 @@ Abra o endereço `http://localhost:3000/` no seu navegador, espere compilar, cri
 
 ### Features implementadas
 
-[x] Cadastro e Login/Logout
-[x] Proteção de páginas através de autenticação
-[x] Verificação de formato `.glb` válido
-[x] Upload de arquivo
-[x] Deleção de arquivo
-[x] Visualização de `.glb` utilizando `model-viewer`
+- [x] Cadastro e Login/Logout
+- [x] Proteção de páginas através de autenticação
+- [x] Verificação de formato `.glb` válido
+- [x] Upload de arquivo
+- [x] Deleção de arquivo
+- [x] Visualização de `.glb` utilizando `model-viewer`
